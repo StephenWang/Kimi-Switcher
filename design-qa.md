@@ -51,3 +51,5 @@ final result: passed
 2026-10-15 追加界面修改：按用户要求将标题改为 Kimi Switch，主题文字按钮改为太阳/月亮 SVG。浏览器已验证深浅色互换、图标显示、悬浮说明与键盘焦点保持。证据为 docs/screenshots/kimi-switch-theme-dark.png 和 kimi-switch-theme-light.png。
 
 2026-10-15 无边框更新：独立标题栏 38px，右侧 SVG 窗口控制按钮，账号“当前”改为右下角绿色 Badge。730px 视口下 Badge 距右边约 16px、下边约 12px，无横向溢出。深浅主题分别见 docs/screenshots/frameless-dark.png、frameless-light.png。浏览器中的窗口按钮禁用；真实桌面窗口动作未做自动点击验证。
+
+2026-10-15 当前账号高亮：蓝色 1px 边框、淡蓝底色与轻微外光晕；绿色 Badge 保留，深浅主题分别设置颜色。增加 150ms 进入动画及样式过渡，减少动态效果偏好下关闭。浏览器合成数据中切换至账号 B 后，只有 B 保留高亮和 Badge，A/C 恢复普通卡片。深浅主题证据为 docs/screenshots/current-highlight-dark.png、current-highlight-light.png。
