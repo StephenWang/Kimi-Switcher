@@ -228,7 +228,7 @@ async fn run_login(
             } else {
                 update(&status, "saving", None);
                 (|| {
-                    let cli = CliAdapter::from_home(dir.path().to_owned(), "2.1.1")?;
+                    let cli = CliAdapter::credential_reader(dir.path().to_owned());
                     let credential = cli.read_active()?.ok_or_else(|| {
                         AppError::new("login_credential", "登录完成但未生成有效凭据")
                     })?;

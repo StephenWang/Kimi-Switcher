@@ -51,10 +51,27 @@ fn unknown_identity_is_not_assumed_equal() {
     assert!(!a.same_account(&b));
 }
 #[test]
-fn rejects_unsupported_cli_version() {
-    assert!(supports_version("2.1.1"));
-    assert!(!supports_version("1.0.0"));
-    assert!(!supports_version("9.0.0"));
+fn allows_cli_versions_without_a_known_incompatibility() {
+    for version in [
+        "0.43.1", "1.0.0", "2.0.0", "2.0.1", "2.0.2", "2.1.0", "2.1.1", "2.2.0", "9.0.0",
+    ] {
+        assert!(
+            supports_version(version),
+            "{version} must not be rejected by a whitelist"
+        );
+    }
+}
+#[test]
+fn rejects_only_known_incompatible_cli_and_missing_version() {
+    use kimi_switcher::cli::CliAdapter;
+    assert!(!supports_version("0.1.1"));
+    assert!(!supports_version(" 0.1.1\n"));
+    assert!(!supports_version(""));
+    let error = CliAdapter::from_home(PathBuf::from("unused"), "0.1.1")
+        .err()
+        .unwrap();
+    assert!(error.message.contains("0.1.1"));
+    assert!(error.message.contains("login --region"));
 }
 #[test]
 fn fresh_cli_directory_has_no_active_account() {

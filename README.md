@@ -15,7 +15,7 @@ Rust + Tauri 2 开发的 Windows 桌面应用，用于管理 Kimi Code CLI 登�
 
 ## 环境
 
-Windows 10/11 x64、Microsoft Edge WebView2 Runtime、Kimi Code CLI **2.1.1**。目前仅接受此已验证版本，其他版本会显示不兼容提示。CLI 支持用户 npm 全局安装入口（`%APPDATA%/npm/node_modules/@moonshot-ai/kimi-code/dist/main.mjs` + PATH 中的 Node.js），或 PATH 中的 `kimi.exe`。
+Windows 10/11 x64、Microsoft Edge WebView2 Runtime、Kimi Code CLI（`@moonshot-ai/kimi-code`）。**不支持 CLI 0.1.1**，该版本缺少助手依赖的 `login --region` 命令。CLI 支持用户 npm 全局安装入口（`%APPDATA%/npm/node_modules/@moonshot-ai/kimi-code/dist/main.mjs` + PATH 中的 Node.js），或 PATH 中的 `kimi.exe`。
 
 配置目录默认 `%USERPROFILE%/.kimi-code`；若进程设置了 `KIMI_CODE_HOME`，则管理该目录。自定义认证/API 主机与 keyring 凭据不在首版支持范围内。
 

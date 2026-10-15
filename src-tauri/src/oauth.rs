@@ -54,7 +54,7 @@ impl UsageClient {
             .post(format!("{auth}/api/oauth/token"))
             .header("X-Msh-Device-Id", device)
             .header("X-Msh-Platform", "kimi_code_cli")
-            .header("X-Msh-Version", "2.1.1")
+            .header("X-Msh-Version", &self.cli_version)
             .form(&[
                 ("client_id", "17e5f671-d194-4dfb-9706-5516cb48c098"),
                 ("grant_type", "refresh_token"),

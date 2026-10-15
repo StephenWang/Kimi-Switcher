@@ -76,7 +76,8 @@ pub fn resolve_home(user: PathBuf, override_home: Option<PathBuf>) -> PathBuf {
         .unwrap_or_else(|| user.join(".kimi-code"))
 }
 pub fn supports_version(version: &str) -> bool {
-    version.trim() == "2.1.1"
+    // 0.1.1 only has interactive /login, without the isolated login --region flow.
+    !version.trim().is_empty() && version.trim() != "0.1.1"
 }
 pub fn parse_config(text: &str) -> AppResult<toml_edit::DocumentMut> {
     text.parse()
@@ -116,17 +117,30 @@ impl Launch {
 }
 impl CliAdapter {
     pub fn from_home(home: PathBuf, version: &str) -> AppResult<Self> {
+        if version.trim().is_empty() {
+            return Err(AppError::new(
+                "version",
+                "无法读取 Kimi Code CLI 版本，请检查 CLI 安装",
+            ));
+        }
         if !supports_version(version) {
             return Err(AppError::new(
                 "version",
-                "当前只支持已验证的 Kimi Code CLI 2.1.1",
+                "不支持 Kimi Code CLI 0.1.1：缺少 login --region 命令，请升级 CLI",
             ));
         }
         Ok(Self {
             home,
-            version: version.into(),
+            version: version.trim().into(),
             launch: None,
         })
+    }
+    pub(crate) fn credential_reader(home: PathBuf) -> Self {
+        Self {
+            home,
+            version: String::new(),
+            launch: None,
+        }
     }
     pub fn detect() -> AppResult<Self> {
         let user = std::env::var_os("USERPROFILE")
@@ -137,6 +151,12 @@ impl CliAdapter {
         );
         let launch = detect_launch()?;
         let output = launch.command().arg("--version").output()?;
+        if !output.status.success() {
+            return Err(AppError::new(
+                "version",
+                "无法读取 Kimi Code CLI 版本，请检查 CLI 安装",
+            ));
+        }
         let version = String::from_utf8_lossy(&output.stdout).trim().to_owned();
         let mut cli = Self::from_home(home, &version)?;
         cli.launch = Some(launch);
@@ -226,7 +246,7 @@ pub fn detect_launch() -> AppResult<Launch> {
     }
     Err(AppError::new(
         "cli_missing",
-        "未找到 Kimi Code CLI。请先安装 @moonshot-ai/kimi-code 2.1.1",
+        "未找到 Kimi Code CLI。请先安装 @moonshot-ai/kimi-code",
     ))
 }
 fn find_executable(name: &str) -> Option<PathBuf> {

@@ -152,7 +152,7 @@ impl SwitchService {
             credential = active.expect("checked");
             self.repo.save_credential(id, &credential)?;
         }
-        let client = UsageClient::new()?;
+        let client = UsageClient::new(&self.cli.version)?;
         let needs_refresh =
             credential.expires_at() <= chrono::Utc::now().timestamp() as f64 + 300.0;
         if is_active && needs_refresh {

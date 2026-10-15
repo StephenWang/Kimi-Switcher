@@ -78,10 +78,12 @@ pub fn endpoints(region: &str) -> AppResult<(&'static str, &'static str)> {
 #[derive(Clone)]
 pub struct UsageClient {
     pub(crate) client: reqwest::Client,
+    pub(crate) cli_version: String,
 }
 impl UsageClient {
-    pub fn new() -> AppResult<Self> {
+    pub fn new(cli_version: &str) -> AppResult<Self> {
         Ok(Self {
+            cli_version: cli_version.to_owned(),
             client: reqwest::Client::builder()
                 .timeout(Duration::from_secs(20))
                 .redirect(reqwest::redirect::Policy::none())
