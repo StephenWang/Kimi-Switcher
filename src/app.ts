@@ -1,6 +1,7 @@
 import type {Api,AppSnapshot,LoginStatus} from './types';
 import {renderAccountCard} from './components/account-card';
 import {askDialog} from './components/dialogs';
+import {setActionIcon} from './components/action-icon';
 import sunIcon from './assets/sun.svg?url';
 import moonIcon from './assets/moon.svg?url';
 export class AppUI {
@@ -19,7 +20,8 @@ export class AppUI {
   const themeButton=this.button('',()=>{const focused=document.activeElement===themeButton;const theme=light?'dark':'light';document.documentElement.dataset.theme=theme;localStorage.setItem('kimi-theme',theme);this.render();if(focused)this.root.querySelector<HTMLButtonElement>('.theme-toggle')?.focus();},'theme-toggle');
   themeButton.setAttribute('aria-label',themeLabel);themeButton.title=themeLabel;
   const themeIcon=document.createElement('img');themeIcon.src=light?moonIcon:sunIcon;themeIcon.alt='';themeIcon.setAttribute('aria-hidden','true');themeIcon.width=20;themeIcon.height=20;themeButton.append(themeIcon);
-  actions.append(this.button('＋ 添加账号',()=>void this.add(),'primary',busy||unavailable),this.button('导入当前账号',()=>void this.importCurrent(),'',busy||unavailable),this.button(this.working?'处理中…':'刷新',()=>void this.run(()=>this.api.refresh(),'额度已刷新'),'',busy||unavailable),themeButton);
+  const refreshButton=this.button('',()=>void this.run(()=>this.api.refresh(),'额度已刷新'),'',busy||unavailable);setActionIcon(refreshButton,'refresh',this.working?'处理中…':'刷新全部账号');
+  actions.append(this.button('＋ 添加账号',()=>void this.add(),'primary',busy||unavailable),this.button('导入当前账号',()=>void this.importCurrent(),'',busy||unavailable),refreshButton,themeButton);
   toolbar.append(title,actions);this.root.append(toolbar);
   if(this.data.error)this.message(this.data.error,'error');
   if(this.notice)this.message(this.notice,this.noticeType);

@@ -53,3 +53,5 @@ final result: passed
 2026-10-15 无边框更新：独立标题栏 38px，右侧 SVG 窗口控制按钮，账号“当前”改为右下角绿色 Badge。730px 视口下 Badge 距右边约 16px、下边约 12px，无横向溢出。深浅主题分别见 docs/screenshots/frameless-dark.png、frameless-light.png。浏览器中的窗口按钮禁用；真实桌面窗口动作未做自动点击验证。
 
 2026-10-15 当前账号高亮：蓝色 1px 边框、淡蓝底色与轻微外光晕；绿色 Badge 保留，深浅主题分别设置颜色。增加 150ms 进入动画及样式过渡，减少动态效果偏好下关闭。浏览器合成数据中切换至账号 B 后，只有 B 保留高亮和 Badge，A/C 恢复普通卡片。深浅主题证据为 docs/screenshots/current-highlight-dark.png、current-highlight-light.png。
+
+2026-10-15 操作图标：卡片刷新、重命名、删除分别使用刷新箭头、文档编辑、垃圾桶 SVG，顶部全部刷新统一图标。保留原有无障碍名称与悬浮提示，删除保持红色，图标随主题继承文字颜色。合成预览中验证刷新成功提示、重命名对话框、删除确认及取消。截图为 docs/screenshots/action-icons-dark.png、action-icons-light.png。前端 8/8 测试及 TypeScript/Vite 构建通过。

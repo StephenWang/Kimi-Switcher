@@ -12,3 +12,4 @@
 .account-card{transition:background-color .15s ease,border-color .15s ease,box-shadow .15s ease}.account-card.is-current{background-color:var(--current-card);border-color:var(--current-border);box-shadow:0 0 0 1px var(--current-glow),0 3px 16px var(--current-glow);animation:current-highlight .15s ease-out}
 @keyframes current-highlight{from{background-color:var(--card);border-color:var(--border)}to{background-color:var(--current-card);border-color:var(--current-border)}}
 @media(prefers-reduced-motion:reduce){.account-card{animation:none!important}}
+.account-actions .icon-button,.toolbar-actions .icon-button{display:inline-flex;align-items:center;justify-content:center;width:36px;min-width:36px;height:36px;padding:7px}.toolbar-actions .icon-button{width:40px;min-width:40px;height:38px}.icon-button svg{display:block;flex-shrink:0;pointer-events:none}
