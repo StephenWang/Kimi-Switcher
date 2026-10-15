@@ -8,6 +8,7 @@
 - 前端测试 8/8 通过，包括窗口命令分发、最大化/还原状态同步、拖拽区域与按钮隔离、浏览器预览禁用和 Badge 位置。
 - TypeScript/Vite 构建通过；深浅主题截图保存至 `docs/screenshots/frameless-dark.png` 和 `frameless-light.png`。
 - 原生窗口按钮的真实桌面点击/拖拽未自动操作；交互调用通过窗口接口替身测试验证。
+- 最终 Tauri/NSIS 构建成功，交付文件更新至 `release/`；在隔离的空 CLI/AppData 目录启动新版 EXE，InputIdle=True、UnexpectedExit=False、Responding=True。
 
 日期：2026-10-15。环境：Windows x64，Kimi Code CLI 2.1.1，Node.js 24.11.1，Rust/Cargo 1.98.0。
 

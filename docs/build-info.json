@@ -1,11 +1,11 @@
 {
   "version": "0.1.0",
   "verifiedOn": "2026-10-15",
-  "codeCommit": "484609c9a3bd6ead2d39c4e87f064a39baedca41",
+  "codeCommit": "b93d12d3ca6a31e464b1828dc88d99856d37f5a6",
   "rustTests": 37,
-  "frontendTests": 5,
-  "portableSha256": "3E6E1E445C74AA171AD09236EDBE1B4D1008CC788E794E21FF94FFD43AA3003E",
-  "installerSha256": "985CEC3742CBC1C0C7CFE3EACE9DC8562C05637AB1AF69A04F92DB1327156902",
+  "frontendTests": 8,
+  "portableSha256": "CF9C3C4B5E8FBB117809363FA479D0E68E9AA71C5D872E5CE4A622AFCD44CF03",
+  "installerSha256": "B581FA1C285C60D909CE5B501988D77F63641D7A706646E8B7BA9E7DFD35F652",
   "portablePath": "release/Kimi Switch.exe",
   "installerPath": "release/Kimi Switch_0.1.0_x64-setup.exe"
 }
