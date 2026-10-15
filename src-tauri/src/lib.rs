@@ -37,7 +37,6 @@ pub fn run() {
                     let guard = state.core.lock().await;
                     let cleaned = login.shutdown_and_wait().await.is_ok();
                     drop(guard);
-                    drop(state);
                     if cleaned {
                         app.exit(0);
                     }

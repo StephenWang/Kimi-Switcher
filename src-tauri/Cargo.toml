@@ -5,7 +5,7 @@ edition = "2021"
 
 [lib]
 name = "kimi_switcher"
-crate-type = ["lib", "cdylib", "staticlib"]
+crate-type = ["lib"]
 
 [[bin]]
 name = "kimi-switcher"
