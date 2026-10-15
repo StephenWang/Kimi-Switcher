@@ -15,3 +15,5 @@ Task 1: complete — adapter 5/5, frontend build and cargo check passed. Task 2:
 Task 3: complete — 7 quota/OAuth cases passed, combined suite 18/18. Ruling: persist rotated credentials before requesting quota — losing the usage response must not discard a rotated refresh token — cost if wrong: additional disk transaction per refresh.
 
 Task 4: switch tests 5/5 passed; failure injection restores both files, startup restores interrupted transaction. Task 5: login argument and authorization URL tests written, RED observed.
+
+Tasks 4–6: implemented. Rust suite 32/32, UI suite 5/5; desktop cargo check passed. Added rotated-token roll-forward journal and per-region account deduplication. Ruling: refresh-all uses concurrency 1 (within maximum 3) to serialize token writes — cost: slower refresh across many accounts. Initial NSIS download timeout resolved by fetching official tool archive and plugin with independently verified upstream SHA1 hashes. Final independent review pending.
