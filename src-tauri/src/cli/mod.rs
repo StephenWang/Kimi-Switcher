@@ -154,7 +154,9 @@ impl CliAdapter {
     }
     pub fn region_and_key(&self) -> AppResult<(String, String)> {
         let doc = parse_config(&self.config()?)?;
-        let provider = &doc["providers"].get("managed:kimi-code");
+        let provider = doc
+            .get("providers")
+            .and_then(|p| p.get("managed:kimi-code"));
         let key = provider
             .and_then(|p| p.get("oauth"))
             .and_then(|v| v.get("key"))

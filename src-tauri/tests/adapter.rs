@@ -56,3 +56,18 @@ fn rejects_unsupported_cli_version() {
     assert!(!supports_version("1.0.0"));
     assert!(!supports_version("9.0.0"));
 }
+#[test]
+fn fresh_cli_directory_has_no_active_account() {
+    use kimi_switcher::cli::CliAdapter;
+    let dir = tempfile::tempdir_in(env!("CARGO_MANIFEST_DIR")).unwrap();
+    let cli = CliAdapter::from_home(dir.path().to_owned(), "2.1.1").unwrap();
+    assert_eq!(
+        cli.region_and_key().unwrap(),
+        ("mainland-cn".into(), "kimi-code".into())
+    );
+    assert!(cli.read_active().unwrap().is_none());
+    for config in ["", "default_model='other'\n", "[tools]\nmy_tool=true\n"] {
+        std::fs::write(dir.path().join("config.toml"), config).unwrap();
+        assert!(cli.read_active().unwrap().is_none());
+    }
+}

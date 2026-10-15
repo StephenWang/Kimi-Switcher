@@ -118,9 +118,14 @@ pub async fn refresh_all(state: State<'_, AppState>) -> AppResult<AppSnapshot> {
         .into_iter()
         .map(|a| a.id)
         .collect::<Vec<_>>();
+    let total = ids.len();
+    let mut failures = vec![];
     for id in ids {
-        let _ = svc.refresh_account(&id).await;
+        if let Err(error) = svc.refresh_account(&id).await {
+            failures.push(error);
+        }
     }
+    crate::usage::summarize_refresh(total, &failures)?;
     svc.snapshot()
 }
 #[tauri::command]

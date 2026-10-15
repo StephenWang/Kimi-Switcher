@@ -55,10 +55,10 @@ pub fn complete(repo: &mut Repository, cli: &CliAdapter) -> AppResult<()> {
     let current = cli
         .read_active()?
         .ok_or_else(|| AppError::new("refresh_changed", "CLI 已退出登录，已停止恢复令牌"))?;
-    if !current.same_account(&before) && !current.same_account(&after) {
+    if current.bytes() != before.bytes() && current.bytes() != after.bytes() {
         return Err(AppError::new(
             "refresh_changed",
-            "CLI 已登录其他账号，未覆盖其凭据。请保留恢复记录",
+            "CLI 凭据已被外部更新，未覆盖现有登录。请保留恢复记录并查看恢复说明",
         ));
     }
     // Refresh token rotation cannot be rolled back: recover forward to the new token.

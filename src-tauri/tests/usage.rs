@@ -76,3 +76,12 @@ fn refreshed_token_preserves_wire_fields() {
     );
     assert!(parse_refreshed(&c, &json!({"access_token":"bad"}), 1000).is_err());
 }
+#[test]
+fn bulk_refresh_cannot_report_success_when_some_requests_failed() {
+    use kimi_switcher::{model::AppError, usage::summarize_refresh};
+    let error = AppError::new("cli_running", "请关闭 CLI");
+    assert!(summarize_refresh(3, &[]).is_ok());
+    let result = summarize_refresh(3, &[error]);
+    assert!(result.is_err());
+    assert!(result.unwrap_err().message.contains("2/3"));
+}

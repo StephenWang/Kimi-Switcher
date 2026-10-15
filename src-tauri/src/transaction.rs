@@ -149,6 +149,23 @@ impl Transaction {
                 "恢复记录与当前 CLI 目录不匹配，已停止写入",
             ));
         }
+        // Validate the entire file set before the first write. Identity alone
+        // does not distinguish an old token from a newer external refresh.
+        for entry in &journal.entries {
+            let current = read_optional(&entry.path)?;
+            if current != entry.before && current.as_deref() != Some(entry.after.as_slice()) {
+                return Err(AppError::new(
+                    "recovery_conflict",
+                    "CLI 文件已被外部更新，未覆盖现有凭据或配置。请保留恢复记录并查看恢复说明",
+                ));
+            }
+        }
+        let paths = journal
+            .entries
+            .iter()
+            .map(|e| e.path.clone())
+            .collect::<Vec<_>>();
+        let _guards = crate::switch::guard_files(&paths)?;
         Self {
             root: root.to_owned(),
             journal,

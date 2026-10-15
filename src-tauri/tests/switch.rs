@@ -164,3 +164,80 @@ fn refresh_recovery_does_not_overwrite_external_login() {
         "external-token"
     );
 }
+#[test]
+fn refresh_recovery_preserves_newer_external_token_for_same_account() {
+    use kimi_switcher::refresh_recovery;
+    let (_dir, mut svc, a, _) = setup();
+    let old = svc.cli.read_active().unwrap().unwrap();
+    let rotated = cred("a", "journal-r1");
+    refresh_recovery::stage(&svc.repo, &svc.cli, &a, &old, &rotated).unwrap();
+    let external = cred("a", "external-r2");
+    std::fs::write(svc.cli.credential_path().unwrap(), external.bytes()).unwrap();
+    assert!(refresh_recovery::complete(&mut svc.repo, &svc.cli).is_err());
+    assert_eq!(
+        svc.cli.read_active().unwrap().unwrap().refresh(),
+        "external-r2"
+    );
+    assert!(svc.repo.root.join("refresh.dpapi").exists());
+}
+#[test]
+fn switch_recovery_preserves_external_changes_and_keeps_journal() {
+    use kimi_switcher::transaction::{FileChange, Transaction};
+    let (_dir, svc, _, _) = setup();
+    let path = svc.cli.credential_path().unwrap();
+    let old_config = std::fs::read(svc.cli.home.join("config.toml")).unwrap();
+    let _tx = Transaction::prepare(
+        &svc.repo.root,
+        &svc.cli.home,
+        vec![
+            FileChange {
+                path: path.clone(),
+                after: cred("b", "tx-b").bytes(),
+            },
+            FileChange {
+                path: svc.cli.home.join("config.toml"),
+                after: b"changed config".to_vec(),
+            },
+        ],
+    )
+    .unwrap();
+    std::fs::write(&path, cred("external", "external-r3").bytes()).unwrap();
+    assert!(Transaction::recover(&svc.repo.root, &svc.cli.home).is_err());
+    assert_eq!(
+        svc.cli.read_active().unwrap().unwrap().refresh(),
+        "external-r3"
+    );
+    assert_eq!(
+        std::fs::read(svc.cli.home.join("config.toml")).unwrap(),
+        old_config
+    );
+    assert!(svc.repo.root.join("pending.dpapi").exists());
+}
+#[test]
+fn switch_recovery_checks_all_files_before_restoring_any() {
+    use kimi_switcher::transaction::{FileChange, Transaction};
+    let (_dir, svc, _, _) = setup();
+    let path = svc.cli.credential_path().unwrap();
+    let config = svc.cli.home.join("config.toml");
+    let after = cred("b", "tx-b").bytes();
+    let _tx = Transaction::prepare(
+        &svc.repo.root,
+        &svc.cli.home,
+        vec![
+            FileChange {
+                path: path.clone(),
+                after: after.clone(),
+            },
+            FileChange {
+                path: config.clone(),
+                after: b"tx-config".to_vec(),
+            },
+        ],
+    )
+    .unwrap();
+    std::fs::write(&path, &after).unwrap();
+    std::fs::write(&config, b"external-config-edit").unwrap();
+    assert!(Transaction::recover(&svc.repo.root, &svc.cli.home).is_err());
+    assert_eq!(std::fs::read(&path).unwrap(), after);
+    assert_eq!(std::fs::read(config).unwrap(), b"external-config-edit");
+}

@@ -61,4 +61,6 @@ npm run tauri build
 
 恢复失败时，保留整个助手数据目录和 CLI 目录，先关闭 CLI 再重启助手；不要删除 `pending.dpapi` 或 `refresh.dpapi` 来绕过提示。原始 CLI 凭据保持官方格式，助手保存的副本和备份经过 DPAPI 加密。界面与日志不展示 token。
 
+如果提示“CLI 文件已被外部更新”，表示恢复记录与当前登录或配置发生冲突，助手不会覆盖任何文件。如果明确决定保留当前 CLI 登录：先关闭 CLI 与助手，完整复制备份两个数据目录，再将冲突的 `pending.dpapi` 或 `refresh.dpapi` 改名为 `.conflict.dpapi` 后重启并导入当前账号。保留改名后的加密记录；这代表放弃自动恢复该次事务，不代表恢复记录已经应用。
+
 兼容性依据见 [docs/compatibility.md](docs/compatibility.md)，验证记录见 [docs/verification.md](docs/verification.md)。

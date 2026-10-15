@@ -4,6 +4,21 @@ use crate::{
 };
 use serde_json::Value;
 use std::time::Duration;
+pub fn summarize_refresh(total: usize, failures: &[AppError]) -> AppResult<()> {
+    if let Some(first) = failures.first() {
+        Err(AppError::new(
+            "refresh_partial",
+            &format!(
+                "已刷新 {}/{} 个账号；{}",
+                total.saturating_sub(failures.len()),
+                total,
+                first.message
+            ),
+        ))
+    } else {
+        Ok(())
+    }
+}
 pub fn parse_usage(payload: &Value) -> AppResult<QuotaSnapshot> {
     if !payload["usages"].is_object() {
         return Err(AppError::new(
