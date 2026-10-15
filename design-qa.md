@@ -47,3 +47,5 @@
 - [x] 主要交互与控制台检查
 
 final result: passed
+
+2026-10-15 追加界面修改：按用户要求将标题改为 Kimi Switch，主题文字按钮改为太阳/月亮 SVG。浏览器已验证深浅色互换、图标显示、悬浮说明与键盘焦点保持。证据为 docs/screenshots/kimi-switch-theme-dark.png 和 kimi-switch-theme-light.png。

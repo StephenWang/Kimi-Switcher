@@ -6,3 +6,4 @@
 
 :root[data-theme=light] .plan-tag{color:#326ba7;border-color:#6c93bf;box-shadow:none}:root[data-theme=light] .quota-value{color:#172a35;text-shadow:none}.login-url{width:100%;background:var(--track);border:1px solid var(--border);border-radius:6px;padding:10px}
 :root[data-theme=light]{--blue:#1673c7}:root[data-theme=light] .current-marker{color:#16883d}:root[data-theme=light] .notice.error,:root[data-theme=light] .account-error{color:#a83229}:root[data-theme=light] .notice.success{color:#176d38}:root[data-theme=light] button.danger{color:#b3332d}:root[data-theme=light] .preview-badge{color:#8a6200}
+.toolbar-actions .theme-toggle{width:40px;min-width:40px;padding:8px;display:inline-flex;align-items:center;justify-content:center}.theme-toggle img{display:block;width:20px;height:20px}

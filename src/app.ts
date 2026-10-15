@@ -1,6 +1,8 @@
 import type {Api,AppSnapshot,LoginStatus} from './types';
 import {renderAccountCard} from './components/account-card';
 import {askDialog} from './components/dialogs';
+import sunIcon from './assets/sun.svg?url';
+import moonIcon from './assets/moon.svg?url';
 export class AppUI {
  private data:AppSnapshot={accounts:[],cliVersion:null,cliHome:'',activeState:'loading',error:null};
  private working=false;private notice='';private noticeType='';private login:LoginStatus|null=null;private timer:ReturnType<typeof setTimeout>|undefined;
@@ -10,9 +12,14 @@ export class AppUI {
  private get loginActive(){return !!this.login&&['starting','waiting','saving','cancelling'].includes(this.login.stage);}
  private render(){
   const busy=this.working||this.loginActive;this.root.replaceChildren();
-  const toolbar=document.createElement('header');toolbar.className='toolbar';const title=document.createElement('h1');title.textContent='Kimi 换号器';const actions=document.createElement('div');actions.className='toolbar-actions';
+  const toolbar=document.createElement('header');toolbar.className='toolbar';const title=document.createElement('h1');title.textContent='Kimi Switch';const actions=document.createElement('div');actions.className='toolbar-actions';
   const unavailable=!this.data.cliVersion;
-  actions.append(this.button('＋ 添加账号',()=>void this.add(),'primary',busy||unavailable),this.button('导入当前账号',()=>void this.importCurrent(),'',busy||unavailable),this.button(this.working?'处理中…':'刷新',()=>void this.run(()=>this.api.refresh(),'额度已刷新'),'',busy||unavailable),this.button(document.documentElement.dataset.theme==='light'?'深色':'浅色',()=>{const theme=document.documentElement.dataset.theme==='light'?'dark':'light';document.documentElement.dataset.theme=theme;localStorage.setItem('kimi-theme',theme);this.render();}));
+  const light=document.documentElement.dataset.theme==='light';
+  const themeLabel=light?'切换到深色模式':'切换到浅色模式';
+  const themeButton=this.button('',()=>{const focused=document.activeElement===themeButton;const theme=light?'dark':'light';document.documentElement.dataset.theme=theme;localStorage.setItem('kimi-theme',theme);this.render();if(focused)this.root.querySelector<HTMLButtonElement>('.theme-toggle')?.focus();},'theme-toggle');
+  themeButton.setAttribute('aria-label',themeLabel);themeButton.title=themeLabel;
+  const themeIcon=document.createElement('img');themeIcon.src=light?moonIcon:sunIcon;themeIcon.alt='';themeIcon.setAttribute('aria-hidden','true');themeIcon.width=20;themeIcon.height=20;themeButton.append(themeIcon);
+  actions.append(this.button('＋ 添加账号',()=>void this.add(),'primary',busy||unavailable),this.button('导入当前账号',()=>void this.importCurrent(),'',busy||unavailable),this.button(this.working?'处理中…':'刷新',()=>void this.run(()=>this.api.refresh(),'额度已刷新'),'',busy||unavailable),themeButton);
   toolbar.append(title,actions);this.root.append(toolbar);
   if(this.data.error)this.message(this.data.error,'error');
   if(this.notice)this.message(this.notice,this.noticeType);

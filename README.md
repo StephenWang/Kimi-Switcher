@@ -1,4 +1,4 @@
-# Kimi 换号器
+# Kimi Switch
 
 Rust + Tauri 2 开发的 Windows 桌面应用，用于管理 Kimi Code CLI 登录账号。界面按提供的截图制作，支持深色和浅色主题。
 
@@ -18,7 +18,7 @@ Windows 10/11 x64、Microsoft Edge WebView2 Runtime、Kimi Code CLI **2.1.1**。
 
 ## 使用
 
-1. 启动 Windows 发布文件 `src-tauri/target/release/kimi-switcher.exe`，或安装 `src-tauri/target/release/bundle/nsis/` 内的安装包。
+1. 启动交付目录中的 `release/Kimi Switch.exe`，或安装 `release/Kimi Switch_0.1.0_x64-setup.exe`。自行构建的默认产物位于 `src-tauri/target/release/`。
 2. 已在 CLI 登录时，点击“导入当前账号”；添加其他账号时点击“添加账号”，在官方浏览器授权页自行完成登录。
 3. 切换前关闭所有 Kimi CLI、server、web 和相关会话，点击目标账号的“切换”，再重新启动 `kimi`。
 4. 点击单个账号或顶部“刷新”查询额度。进度条代表已用比例，接口未提供请求次数时只显示百分比。
