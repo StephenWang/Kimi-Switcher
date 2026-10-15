@@ -11,3 +11,5 @@ Ruling: Windows CLI has no OAuth cross-process lock; block all detected Kimi CLI
 Task 1: in progress; tests written before adapter implementation.
 
 Task 1: complete — adapter 5/5, frontend build and cargo check passed. Task 2: complete — repository 6/6 and combined suite 11/11. Ruling: test temp directories are inside project; host short-name TEMP path makes OS rename fail with error 6 even in .NET, while project paths work — cost: tests need writable project directory.
+
+Task 3: complete — 7 quota/OAuth cases passed, combined suite 18/18. Ruling: persist rotated credentials before requesting quota — losing the usage response must not discard a rotated refresh token — cost if wrong: additional disk transaction per refresh.
