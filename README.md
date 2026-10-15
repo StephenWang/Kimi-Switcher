@@ -2,6 +2,8 @@
 
 Rust + Tauri 2 开发的 Windows 桌面应用，用于管理 Kimi Code CLI 登录账号。界面按提供的截图制作，支持深色和浅色主题。
 
+源码仓库：[StephenWang/Kimi-Switcher](https://github.com/StephenWang/Kimi-Switcher)。
+
 ## 功能
 
 - 使用官方 `kimi login` 通过浏览器添加账号，登录过程隔离在临时目录，保留原 CLI 登录。
@@ -31,7 +33,7 @@ Windows 10/11 x64、Microsoft Edge WebView2 Runtime、Kimi Code CLI **2.1.1**。
 需要 Node.js 22.12+、Rust stable，以及 Visual Studio 的“使用 C++ 的桌面开发”组件与 Windows SDK。
 
 ```powershell
-cd D:/Personal/Projects/Gitee/backup_gemini_v3/kimi-switcher
+cd D:/Personal/Projects/Gitee/kimi-switcher
 npm ci
 npm run tauri dev
 ```
