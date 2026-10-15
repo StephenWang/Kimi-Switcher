@@ -11,4 +11,19 @@ fn setup()->(tempfile::TempDir,SwitchService,String,String){
 }
 #[test] fn syncs_latest_active_tokens_before_switch(){let (_dir,mut svc,a,b)=setup();svc.switch_to(&b).unwrap();assert_eq!(svc.repo.credential(&a).unwrap().refresh(),"latest-a");assert_eq!(svc.cli.read_active().unwrap().unwrap().refresh(),"token-b");assert!(svc.cli.config().unwrap().contains("custom='keep'"));}
 #[test] fn lock_contention_writes_nothing(){let (_dir,mut svc,_a,b)=setup();let _lock=OperationLock::acquire(&svc.repo.root).unwrap();assert!(svc.switch_to(&b).is_err());assert_eq!(svc.cli.read_active().unwrap().unwrap().refresh(),"latest-a");}
-#[test] fn preserves_unrelated_toml(){let merged=merge_config("default_model='custom'\n[tools]\nmy_tool=true\n","[providers.'managed:kimi-code']\ntype='kimi'\nbase_url='https://api.kimi.com/coding/v1'\n","mainland-cn","kimi-code").unwrap();assert!(merged.contains("my_tool=true"));assert!(merged.contains("default_model='custom'"));assert!(merged.contains("oauth/kimi-code"));}
+#[test] fn preserves_unrelated_toml(){let merged=merge_config("default_model='custom'\n[tools]\nmy_tool=true\n","[providers.'managed:kimi-code']\ntype='kimi'\nbase_url='https://api.kimi.com/coding/v1'\n","mainland-cn","kimi-code").unwrap();assert!(merged.contains("my_tool=true"));assert!(merged.contains("default_model='custom'"));assert!(merged.contains("oauth/kimi-code"), "{merged}");}
+#[test] fn failure_at_each_write_restores_both_files(){
+ use kimi_switcher::{transaction::{Transaction,FileChange},storage::atomic,model::AppError};
+ for fail_at in 0..2 {let (_dir,svc,_,_)=setup();let config=svc.cli.home.join("config.toml");let cred=svc.cli.credential_path().unwrap();let before_config=std::fs::read(&config).unwrap();let before_cred=std::fs::read(&cred).unwrap();
+ let tx=Transaction::prepare(&svc.repo.root,&svc.cli.home,vec![FileChange{path:config.clone(),after:b"new-config".to_vec()},FileChange{path:cred.clone(),after:b"new-credential".to_vec()}]).unwrap();let mut index=0;
+ assert!(tx.apply_with(|p,b|{let n=index;index+=1;if n==fail_at{Err(AppError::new("injected","write failed"))}else{atomic::write(p,b)}}).is_err());
+ assert_eq!(std::fs::read(&config).unwrap(),before_config);assert_eq!(std::fs::read(&cred).unwrap(),before_cred);
+ }
+}
+#[test] fn startup_recovers_pending_transaction(){
+ use kimi_switcher::{transaction::{Transaction,FileChange},storage::atomic};
+ let (_dir,svc,_,_)=setup();let config=svc.cli.home.join("config.toml");let before=std::fs::read(&config).unwrap();
+ let _tx=Transaction::prepare(&svc.repo.root,&svc.cli.home,vec![FileChange{path:config.clone(),after:b"interrupted".to_vec()}]).unwrap();atomic::write(&config,b"interrupted").unwrap();
+ Transaction::recover(&svc.repo.root,&svc.cli.home).unwrap();assert_eq!(std::fs::read(&config).unwrap(),before);assert!(!svc.repo.root.join("pending.dpapi").exists());
+}
+#[test] fn running_or_unreadable_cli_blocks_write(){use kimi_switcher::cli::process::validate_process_output;assert!(validate_process_output(b"[123]").is_err());assert!(validate_process_output(b"null").is_err());assert!(validate_process_output(b"unknown").is_err());assert!(validate_process_output(b"[]").is_ok());}
