@@ -9,3 +9,5 @@ Ruling: Work in the explicitly designated kimi-switcher subdirectory on codex/ki
 Ruling: Windows CLI has no OAuth cross-process lock; block all detected Kimi CLI writers, exclusively protect credential files, recheck before commit, and document concurrent-start limitation — evidence in installed OAuthManager.resolveLockTarget — cost if wrong: a concurrently started CLI may require re-login.
 
 Task 1: in progress; tests written before adapter implementation.
+
+Task 1: complete — adapter 5/5, frontend build and cargo check passed. Task 2: complete — repository 6/6 and combined suite 11/11. Ruling: test temp directories are inside project; host short-name TEMP path makes OS rename fail with error 6 even in .NET, while project paths work — cost: tests need writable project directory.

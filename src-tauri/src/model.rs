@@ -5,7 +5,7 @@ pub type AppResult<T> = Result<T, AppError>;
 impl AppError { pub fn new(code: &str, message: &str) -> Self { Self { code: code.into(), message: message.into() } } }
 impl std::fmt::Display for AppError { fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result { write!(f, "{}", self.message) } }
 impl std::error::Error for AppError {}
-impl From<std::io::Error> for AppError { fn from(_: std::io::Error) -> Self { Self::new("io", "文件访问失败，请检查权限或文件是否被占用") } }
+impl From<std::io::Error> for AppError { fn from(e: std::io::Error) -> Self { Self::new("io", &format!("文件访问失败（系统错误 {:?}），请检查权限或文件是否被占用",e.raw_os_error())) } }
 #[derive(Clone,Default,Serialize,Deserialize,Debug)]
 #[serde(rename_all="camelCase")]
 pub struct QuotaWindow { pub used_ratio: f64, pub reset_at: Option<String> }
